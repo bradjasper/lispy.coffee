@@ -2,6 +2,8 @@
 
 globals = require('./globals')
 
+env = globals
+
 Symbol = String
 
 # Create spaces where necessary then chop up the parts
@@ -14,7 +16,6 @@ atom = (token) ->
 
 # Convert from tokens into expression tree
 read_from = (tokens) ->
-
     raise "SyntaxError: Unexpected EOF" if tokens.length is 0
 
     token = tokens.shift()
@@ -30,19 +31,16 @@ read_from = (tokens) ->
 # Convert from input code to output code
 parse = (s) -> read_from(tokenize(s))
 
+# Evaluate an expression like ['+', 20, 20]
+evaluate = (expr) ->
 
-# Process an expression like ['+', 20, 20]
-process = (expr) ->
-
-    return globals[expr] if expr of globals         # Symbol
+    return env[expr] if expr of env                 # Symbol
     return expr if expr not instanceof Array        # Constants
 
     # Handle nested expressions
-    exps = (process(x) for x in expr)
+    exps = (evaluate(x) for x in expr)
     proc = exps.shift()
     return proc(exps...)
 
-evaluate = (code) -> process(parse(code))
-
 # Exports
-exports.evaluate = evaluate
+exports.eval = (code) -> evaluate(parse(code))
