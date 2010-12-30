@@ -1,9 +1,10 @@
 # Lispy inspired Javascript Lisp written in CoffeeScript
 
-globals = require('./globals')
+_ = require('./underscore')
+utils = require('./utils')
 stdlib = require('./stdlib')
 
-env = stdlib
+globals = stdlib
 
 Symbol = String
 
@@ -41,7 +42,10 @@ read_from = (tokens) ->
 parse = (s) -> read_from(tokenize(s))
 
 # Evaluate an expression like ['+', 20, 20]
-evaluate = (expr) ->
+evaluate = (expr, locals={}) ->
+
+    env = globals
+    _.extend(env, locals)
 
     return env[expr] if expr of env                         # Symbol
     return eval(expr) if expr not instanceof Array          # Constant
@@ -49,13 +53,18 @@ evaluate = (expr) ->
     switch expr[0]
         when 'quote' then return to_string(expr[1...][0])   # (quote expr)
         when 'if'                                           # (if test conseq alt)
-            [_, test, conseq, alt] = expr
+            [x, test, conseq, alt] = expr
             return conseq if evaluate(test) is true
             return alt
         when 'define'
-            [_, name, expression] = expr
-            env[name] = evaluate(expression)
-            return env[name]
+            [x, name, expression] = expr
+            globals[name] = evaluate(expression)
+            return globals[name]
+        when 'lambda'
+            [x, vars, expression] = expr
+            return (args...) ->
+                evaluate(expression, utils.createobj(vars, args))
+
 
     # Handle expression
     exps = (evaluate(x) for x in expr)
@@ -71,3 +80,6 @@ to_string = (expr) ->
 
 # Exports
 exports.eval = (code) -> evaluate(parse(code))
+
+
+

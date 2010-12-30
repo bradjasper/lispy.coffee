@@ -32,4 +32,8 @@ test '(equal? (+ 20 (* 2 10)) (* 4 (* 5 3)))', no
 test '(quote (+ 20 20))', '(+ 20 20)'
 test '(if true "yes" "no")', '"yes"'
 test '(if false "yes" "no")', '"no"'
-test '(define yes true)', '"no"'
+test '(define yes true)', true
+test '(define no false)', false
+test '(define x (+ (* 2 2) (* 2 2)))', 8
+test 'x', 8
+test '((lambda i (* i i)) 4)', 16
