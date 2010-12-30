@@ -10,5 +10,6 @@ write = (s) -> process.stdout.write(s)
 prompt = (name='lispy') -> write(name + '> ')
 
 stdin.on 'data', (data) -> write(String(lispy.eval(data) + '\n')) and prompt()
+stdin.on 'end', -> write('\nGoodbye\n')
 
 prompt()
