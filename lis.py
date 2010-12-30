@@ -110,6 +110,7 @@ def repl(prompt='lis.py> '):
     "A prompt-read-eval-print loop."
     while True:
         val = eval(parse(raw_input(prompt)))
+        print "val", val
         if val is not None: print to_string(val)
 
 repl()

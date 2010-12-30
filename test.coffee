@@ -8,6 +8,8 @@ test = (code, result) ->
     else
         console.log "SUCCESS: " + code + " equals " + result
 
+
+
 test '20', 20
 test '(+ 100 200)', 300
 test '(+ 100 200 300 400 500)', 1500
@@ -17,3 +19,6 @@ test '(- 400 300 200)', -100
 test '(/ 5000 20 100)', 2.5
 test '(+ 20 (+ 20 20)))', 60
 test '(* 20 (+ 20 20)))', 800
+test '(quote (+ 20 20))', '(+ 20 20)'
+test '(if true "yes" "no")', '"yes"'
+test '(if false "yes" "no")', '"no"'
