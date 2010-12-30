@@ -52,6 +52,10 @@ evaluate = (expr) ->
             [_, test, conseq, alt] = expr
             return conseq if evaluate(test) is true
             return alt
+        when 'define'
+            [_, name, expression] = expr
+            env[name] = evaluate(expression)
+            return env[name]
 
     # Handle expression
     exps = (evaluate(x) for x in expr)

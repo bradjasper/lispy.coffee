@@ -8,11 +8,7 @@ divide = (args...) -> _.reduce(args, (total, val) -> total / val)
 # Greater than and less than
 gt = (args...) -> _.reduce(args, (total, val) -> total > val)
 lt = (args...) -> _.reduce(args, (total, val) -> total < val)
-equal = (args...) ->
-    return yes if args.length < 2
-    for i in [0...args.length-1]
-        return false if args[i] isnt args[i+1]
-    return true
+equal = (args...) -> _.uniq(args).length is 1
 
 exports.sum = sum
 exports.minus = minus
