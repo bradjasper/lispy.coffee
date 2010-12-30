@@ -9,11 +9,10 @@ divide = (args...) -> _.reduce(args, (total, val) -> total / val)
 gt = (args...) -> _.reduce(args, (total, val) -> total > val)
 lt = (args...) -> _.reduce(args, (total, val) -> total < val)
 equal = (args...) ->
-    val = args[0]
-    for arg in args
-        return no if arg isnt val
-    return yes
-
+    return yes if args.length < 2
+    for i in [0...args.length-1]
+        return false if args[i] isnt args[i+1]
+    return true
 
 exports.sum = sum
 exports.minus = minus

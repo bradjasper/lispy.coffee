@@ -23,12 +23,12 @@ test '(* 20 (+ 20 20)))', 800
 test '(> 20 30)', no
 test '(> 20 30 19)', false
 test '(< 10 100 1000)', yes
-#test '(= true true true)', yes
-#test '(= true false true)', no
-#test '(equal? false true)', no
-#test '(equal? (+ 20 20) 40)', yes
-#test '(equal? (+ 20 (* 2 10)) (* 4 (+ 5 2)))', yes
-#test '(equal? (+ 20 (* 2 10)) (* 4 (+ 5 3)))', no
+test '(= true true true)', yes
+test '(= true false true)', no
+test '(equal? false true)', no
+test '(equal? (+ 20 20) 40)', yes
+test '(equal? (+ 20 (* 2 10)) (* 4 (* 5 2)))', yes
+test '(equal? (+ 20 (* 2 10)) (* 4 (* 5 3)))', no
 test '(quote (+ 20 20))', '(+ 20 20)'
 test '(if true "yes" "no")', '"yes"'
 test '(if false "yes" "no")', '"no"'
