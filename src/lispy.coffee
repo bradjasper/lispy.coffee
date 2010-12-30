@@ -1,13 +1,22 @@
 # Lispy inspired Javascript Lisp written in CoffeeScript
 
 globals = require('./globals')
+stdlib = require('./stdlib')
 
-env = globals
+env = stdlib
 
 Symbol = String
 
 # Create spaces where necessary then chop up the parts
-tokenize = (s) -> s.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').split(' ')
+tokenize = (s) ->
+    # Replace brackets, reduce to single spacing, trim edges
+    # This could probably be done a lot more efficiently
+    s.replace(/\(/g, ' ( ') \
+     .replace(/\)/g, ' ) ') \
+     .replace(/\s+/g, ' ')  \
+     .replace(/^\s*/, '')   \
+     .replace(/\s*$/, '')   \
+     .split(' ')
 
 # Create an atom (Number, Symbol)
 atom = (token) ->
@@ -16,15 +25,15 @@ atom = (token) ->
 
 # Convert from tokens into expression tree
 read_from = (tokens) ->
-    raise "SyntaxError: Unexpected EOF" if tokens.length is 0
+    throw "SyntaxError: Unexpected EOF" if tokens.length is 0
 
     token = tokens.shift()
     switch token
-        when '' then return read_from(tokens)
-        when ')' then raise 'SyntaxError'
+        when ')' then throw 'SyntaxError'
         when '('
             list = []
             list.push(read_from(tokens)) while tokens[0] isnt ')'
+            tokens.shift()
             return list
         else return atom(token)
 
@@ -35,13 +44,12 @@ parse = (s) -> read_from(tokenize(s))
 evaluate = (expr) ->
 
     return env[expr] if expr of env                         # Symbol
-    return expr if expr not instanceof Array                # Constant
+    return eval(expr) if expr not instanceof Array          # Constant
 
     switch expr[0]
         when 'quote' then return to_string(expr[1...][0])   # (quote expr)
         when 'if'                                           # (if test conseq alt)
             [_, test, conseq, alt] = expr
-            console.log "EVAL", evaluate(test).constructor
             return conseq if evaluate(test) is true
             return alt
 
